@@ -11,7 +11,7 @@ def index():
     """Show all the foods"""
     db = get_db()
     foods = db.execute(
-        "SELECT fg.group_name, f.name, f.compatibility_rating, f.trigger_mechanism"
+        "SELECT fg.group_name, f.id, f.name, f.compatibility_rating, f.trigger_mechanism"
         " FROM food_group fg JOIN food f ON fg.id = f.group_id"
     ).fetchall()
     return render_template("food/index.html", foods=foods)
@@ -69,10 +69,10 @@ def create():
             db.commit()
             return redirect(url_for("blog.index"))
 
-    return render_template("blog/create.html")
+    return render_template("food/create.html")
 
 
-@bp.route("/<int:id>/update", methods=("GET", "POST"))
+@bp.route("/update/<int:id>", methods=("GET", "POST"))
 def update(id):
     """Update a post if the current user is the author."""
     post = get_post(id)
@@ -95,10 +95,10 @@ def update(id):
             db.commit()
             return redirect(url_for("blog.index"))
 
-    return render_template("blog/update.html", post=post)
+    return render_template("food/update.html", post=post)
 
 
-@bp.route("/<int:id>/delete", methods=("POST",))
+@bp.route("/delete/<int:id>", methods=("POST",))
 def delete(id):
     """Delete a post.
 
@@ -109,4 +109,4 @@ def delete(id):
     db = get_db()
     db.execute("DELETE FROM post WHERE id = ?", (id,))
     db.commit()
-    return redirect(url_for("blog.index"))
+    return redirect(url_for("food.index"))

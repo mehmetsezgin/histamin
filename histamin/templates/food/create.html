@@ -1,15 +1,19 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}New Post{% endblock %}</h1>
+  <h1>{% block title %}New Food{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
   <form method="post">
-    <label for="title">Title</label>
-    <input name="title" id="title" value="{{ request.form['title'] }}" required>
-    <label for="body">Body</label>
-    <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
+    <label for="group">Group</label>
+    <input name="group" id="group" value="{{ request.form['group'] }}" required>
+    <label for="name">Name</label>
+    <input name="name" id="name">{{ request.form['name'] }}</input>
+    <label for="rating">Compatibility Rating</label>
+    <input name="rating" id="rating">{{ request.form['rating'] }}</input>
+    <label for="trigger">Trigger Mechanism</label>
+    <input name="trigger" id="trigger">{{ request.form['trigger'] }}</input>
     <input type="submit" value="Save">
   </form>
 {% endblock %}
