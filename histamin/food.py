@@ -14,7 +14,15 @@ def index():
         "SELECT fg.group_name, f.id, f.name, f.compatibility_rating, f.trigger_mechanism"
         " FROM food_group fg JOIN food f ON fg.id = f.group_id"
     ).fetchall()
-    return render_template("food/index.html", foods=foods)
+
+    compatibility_rating_list = [(-1, 'Unknown'), (0, 'Compatible'), (1, 'Slightly incompatible'), (2, 'Incompatible'),
+                                 (3, 'Severely incompatible')]
+    trigger_mechanism_list = [('', ''), ('H', 'Contains Histamine'), ('H!', 'Perishable, Histamine Increases'),
+                              ('A', 'Contains other biogenic amines'), ('L', 'Histamine Liberator'),
+                              ('B', 'Blocks DAO')]
+
+    return render_template("food/index.html", foods=foods,
+                           cr_list=compatibility_rating_list, tm_list=trigger_mechanism_list)
 
 
 def get_food(id):
@@ -94,8 +102,8 @@ def update(id):
         else:
             db = get_db()
             db.execute(
-                "UPDATE food SET group_id= ?, name = ?, compatibility_rating = ? WHERE trigger_mechanism = ?",
-                (group, food_name, compatibility_rating, trigger_mechanism)
+                "UPDATE food SET group_id= ?, name = ?, compatibility_rating = ?, trigger_mechanism = ? WHERE id = ?",
+                (group, food_name, compatibility_rating, trigger_mechanism, id)
             )
             db.commit()
             return redirect(url_for("food.index"))

@@ -1,19 +1,20 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Foods{% endblock %}</h1>
+  <h1>{% block title %}Food List{% endblock %}</h1>
   <a class="action" href="{{ url_for('food.create') }}">Add Food</a>
 {% endblock %}
 
 {% block content %}
 
-            <table>  <!-- This table with is what i want to return back in a request -->
+            <table>
                 <thead>
                     <tr>
                         <th>Group Name</th>
                         <th>Food Name</th>
-                        <th>Compatibility Rating</th>
+                        <th>Compatibility</th>
                         <th>Trigger Mechanism</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
 
@@ -22,8 +23,14 @@
                      <tr>
                         <td>{{ food.group_name }}</a></td>
                         <td>{{ food.name }}</a></td>
-                        <td>{{ food.compatibility_rating }}</a></td>
-                        <td>{{ food.trigger_mechanism }}</td>
+                        <td>{% for value, description in cr_list %}
+                              {% if value == food.compatibility_rating %} {{description}} {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>{% for value, description in tm_list %}
+                              {% if value == food.trigger_mechanism %} {{description}} {% endif %}
+                            {% endfor %}
+                        </td>
                         <td><a class="action" href="{{ url_for('food.update', id=food['id']) }}">Edit</a></td>
                         <td><a class="action" href="{{ url_for('food.delete', id=food['id']) }}">Delete</a></td>
                       </tr>
