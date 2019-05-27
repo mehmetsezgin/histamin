@@ -17,34 +17,26 @@ def index():
     return render_template("food/index.html", foods=foods)
 
 
-def get_post(id, check_author=True):
-    """Get a post and its author by id.
+def get_food(id):
+    """Get a food
 
-    Checks that the id exists and optionally that the current user is
-    the author.
-
-    :param id: id of post to get
-    :param check_author: require the current user to be the author
+    Checks that the id exists
+    :param id: id of food to get
     :return: the post with author information
-    :raise 404: if a post with the given id doesn't exist
-    :raise 403: if the current user isn't the author
+    :raise 404: if a food with the given id doesn't exist
     """
-    post = (
+    food = (
         get_db().execute(
-            "SELECT p.id, title, body, created, author_id, username"
-            " FROM post p JOIN user u ON p.author_id = u.id"
-            " WHERE p.id = ?",
+            "SELECT id, group_id, name, compatibility_rating, trigger_mechanism"
+            " FROM food WHERE id = ?",
             (id,),
         ).fetchone()
     )
 
-    if post is None:
-        abort(404, "Post id {0} doesn't exist.".format(id))
+    if food is None:
+        abort(404, "Food id {0} doesn't exist.".format(id))
 
-    if check_author and post["author_id"] != g.user["id"]:
-        abort(403)
-
-    return post
+    return food
 
 
 @bp.route("/create", methods=("GET", "POST"))
@@ -75,27 +67,29 @@ def create():
 @bp.route("/update/<int:id>", methods=("GET", "POST"))
 def update(id):
     """Update a post if the current user is the author."""
-    post = get_post(id)
+    food = get_food(id)
 
     if request.method == "POST":
-        title = request.form["title"]
-        body = request.form["body"]
+        food_name = request.form["name"]
+        compatibility_rating = request.form["rating"]
+        trigger_mechanism = request.form["trigger_mechanism"]
         error = None
 
-        if not title:
-            error = "Title is required."
+        if not food_name:
+            error = "Name is required."
 
         if error is not None:
             flash(error)
         else:
             db = get_db()
             db.execute(
-                "UPDATE post SET title = ?, body = ? WHERE id = ?", (title, body, id)
+                "UPDATE food SET name = ?, compatibility_rating = ? WHERE trigger_mechanism = ?",
+                (food_name, compatibility_rating, trigger_mechanism)
             )
             db.commit()
-            return redirect(url_for("blog.index"))
+            return redirect(url_for("food.index"))
 
-    return render_template("food/update.html", post=post)
+    return render_template("food/update.html", food=food)
 
 
 @bp.route("/delete/<int:id>", methods=("POST",))
