@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Foods{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  {% for food in foods %}
+    <tr>
+        <td>{{ food.group_name }}</a></td>
+        <td>{{ food.name }}</a></td>
+        <td>{{ food.compatibility_rating }}</a></td>
+        <td>{{ food.trigger_mechanism }}</td>
+    </tr>
+  {% endfor %}
+{% endblock %}

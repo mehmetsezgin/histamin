@@ -3,7 +3,7 @@ from werkzeug.exceptions import abort
 
 from histamin.db import get_db
 
-bp = Blueprint("blog", __name__)
+bp = Blueprint("food", __name__)
 
 
 @bp.route("/")
