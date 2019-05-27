@@ -1,0 +1,5 @@
+include LICENSE
+include histamin/schema.sql
+graft histamin/static
+graft histamin/templates
+global-exclude *.pyc
