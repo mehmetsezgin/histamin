@@ -7,14 +7,16 @@
 
 {% block content %}
 
-            <table>
+    <div class="row">
+      <div class="col-md-4">
+           <table class="table table-bordered table-responsive-md btn-table" id="food_table">
                 <thead>
                     <tr>
-                        <th>Group Name</th>
-                        <th>Food Name</th>
-                        <th>Compatibility</th>
-                        <th>Trigger Mechanism</th>
-                        <th>Actions</th>
+                        <th scope="col">Group Name</th>
+                        <th scope="col">Food Name</th>
+                        <th scope="col">Compatibility</th>
+                        <th scope="col">Trigger Mechanism</th>
+                        <th scope="col">Actions</th>
                     </tr>
                 </thead>
 
@@ -31,12 +33,12 @@
                               {% if value == food.trigger_mechanism %} {{description}} {% endif %}
                             {% endfor %}
                         </td>
-                        <td><a class="action" href="{{ url_for('food.update', id=food['id']) }}">Edit</a></td>
-                        <td><a class="action" href="{{ url_for('food.delete', id=food['id']) }}">Delete</a></td>
+                        <td><a class="btn btn-primary" href="{{ url_for('food.update', id=food['id']) }}">Edit</a></td>
                       </tr>
                      {% endfor %}
                  </tbody>
-            </table>
-
+    </table>
+  </div>
+</div>
 
 {% endblock %}
