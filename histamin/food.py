@@ -32,7 +32,6 @@ def get_food(id):
             (id,),
         ).fetchone()
     )
-
     if food is None:
         abort(404, "Food id {0} doesn't exist.".format(id))
 
@@ -72,6 +71,7 @@ def create():
                                  (3, 'Severely incompatible')]
     trigger_mechanism_list = [('', ''), ('H', 'Contains Histamine'), ('H!', 'Perishable, Histamine Increases'),
                               ('A', 'Contains other biogenic amines'), ('L', 'Histamine Liberator'), ('B', 'Blocks DAO')]
+
     return render_template("food/create.html", groups=groups, cr_list=compatibility_rating_list,
                            tm_list=trigger_mechanism_list)
 
@@ -79,12 +79,11 @@ def create():
 @bp.route("/update/<int:id>", methods=("GET", "POST"))
 def update(id):
     """Update a post if the current user is the author."""
-    food = get_food(id)
-
     if request.method == "POST":
+        group = request.form["group"]
         food_name = request.form["name"]
         compatibility_rating = request.form["rating"]
-        trigger_mechanism = request.form["trigger_mechanism"]
+        trigger_mechanism = request.form["trigger"]
         error = None
 
         if not food_name:
@@ -95,13 +94,29 @@ def update(id):
         else:
             db = get_db()
             db.execute(
-                "UPDATE food SET name = ?, compatibility_rating = ? WHERE trigger_mechanism = ?",
-                (food_name, compatibility_rating, trigger_mechanism)
+                "UPDATE food SET group_id= ?, name = ?, compatibility_rating = ? WHERE trigger_mechanism = ?",
+                (group, food_name, compatibility_rating, trigger_mechanism)
             )
             db.commit()
             return redirect(url_for("food.index"))
 
-    return render_template("food/update.html", food=food)
+    db = get_db()
+    food = get_food(id)
+
+    groups = db.execute(
+        "SELECT id, group_name FROM food_group "
+    ).fetchall()
+
+    compatibility_rating_list = [(-1, 'Unknown'), (0, 'Compatible'), (1, 'Slightly incompatible'), (2, 'Incompatible'),
+                                 (3, 'Severely incompatible')]
+
+    trigger_mechanism_list = [('', ''), ('H', 'Contains Histamine'), ('H!', 'Perishable, Histamine Increases'),
+                              ('A', 'Contains other biogenic amines'), ('L', 'Histamine Liberator'),
+                              ('B', 'Blocks DAO')]
+
+    return render_template("food/update.html", food=food, groups=groups, original_group=food[1],
+                           cr_list=compatibility_rating_list, original_rating=food[3],
+                           tm_list=trigger_mechanism_list, original_trigger=food[4])
 
 
 @bp.route("/delete/<int:id>", methods=("GET", "POST"))

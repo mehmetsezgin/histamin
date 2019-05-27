@@ -6,14 +6,28 @@
 
 {% block content %}
   <form method="post">
-   <label for="group">Group</label>
-    <input name="group" id="group" value="{{ request.form['group'] }}" required>
+    <label for="group">Group</label>
+    <select name="group" width="300px">
+       {% for group in groups %}
+                <option value="{{ group.id}}" {% if group.id == original_group %} selected {% endif %}>{{ group.group_name }}</option>
+       {% endfor %}
+    </select>
     <label for="name">Name</label>
-    <input name="name" id="name">{{ request.form['name'] }}</input>
+    <input name="name" id="name" value="{{ request.form['name'] or food.name }}"></input>
+
     <label for="rating">Compatibility Rating</label>
-    <input name="rating" id="rating">{{ request.form['rating'] }}</input>
+
+    <select name="rating" id="rating">
+        {% for value, description in cr_list %}
+           <option value="{{value}}" {% if value == original_rating %} selected {% endif %} >{{description}}</option>
+        {% endfor %}
+    </select>
     <label for="trigger">Trigger Mechanism</label>
-    <input name="trigger" id="trigger">{{ request.form['trigger'] }}</input>
+    <select name="trigger" id="trigger">
+        {% for value, description in tm_list %}
+           <option value="{{value}}" {% if value == original_trigger %} selected {% endif %}>{{description}}</option>
+        {% endfor %}
+    </select>
     <input type="submit" value="Save">
   </form>
   <hr>
