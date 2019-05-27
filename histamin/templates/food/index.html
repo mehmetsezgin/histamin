@@ -1,44 +1,49 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Food List{% endblock %}</h1>
-  <a class="action" href="{{ url_for('food.create') }}">Add Food</a>
+  <h3>{% block title %}Food List{% endblock %}</h3>
+
 {% endblock %}
 
 {% block content %}
 
-    <div class="row">
-      <div class="col-md-4">
-           <table class="table table-bordered table-responsive-md btn-table" id="food_table">
-                <thead>
-                    <tr>
-                        <th scope="col">Group Name</th>
-                        <th scope="col">Food Name</th>
-                        <th scope="col">Compatibility</th>
-                        <th scope="col">Trigger Mechanism</th>
-                        <th scope="col">Actions</th>
+
+      <div class="container">
+           <table class="table table-striped" id="food_table">
+                <thead class="thead-dark">
+                    <tr class="d-flex">
+                        <th class="col-2">Group Name</th>
+                        <th class="col-2">Food Name</th>
+                        <th class="col-2">Compatibility</th>
+                        <th class="col-3">Trigger Mechanism</th>
+                        <th class="col-2">Actions</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     {% for food in foods %}
-                     <tr>
-                        <td>{{ food.group_name }}</a></td>
-                        <td>{{ food.name }}</a></td>
-                        <td>{% for value, description in cr_list %}
+                     <tr class="d-flex">
+                        <td class="col-sm-2">{{ food.group_name }}</a></td>
+                        <td class="col-sm-2">{{ food.name }}</a></td>
+                        <td class="col-sm-2">{% for value, description in cr_list %}
                               {% if value == food.compatibility_rating %} {{description}} {% endif %}
                             {% endfor %}
                         </td>
-                        <td>{% for value, description in tm_list %}
+                        <td class="col-sm-3">{% for value, description in tm_list %}
                               {% if value == food.trigger_mechanism %} {{description}} {% endif %}
                             {% endfor %}
                         </td>
-                        <td><a class="btn btn-primary" href="{{ url_for('food.update', id=food['id']) }}">Edit</a></td>
+                        <td class="col-sm-2">
+                         <a class="btn btn-primary" href="{{ url_for('food.update', id=food['id']) }}">Edit</a>
+                         <a class="btn btn-primary" href="{{ url_for('food.delete', id=food['id']) }}">Delete</a>
+
+                        </td>
                       </tr>
                      {% endfor %}
                  </tbody>
     </table>
+    <a class="btn btn-primary" href="{{ url_for('food.create') }}">Add Food</a>
   </div>
-</div>
+
 
 {% endblock %}

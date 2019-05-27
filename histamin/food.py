@@ -12,7 +12,7 @@ def index():
     db = get_db()
     foods = db.execute(
         "SELECT fg.group_name, f.id, f.name, f.compatibility_rating, f.trigger_mechanism"
-        " FROM food_group fg JOIN food f ON fg.id = f.group_id"
+        " FROM food_group fg JOIN food f ON fg.id = f.group_id ORDER BY fg.group_name ASC"
     ).fetchall()
 
     compatibility_rating_list = [(-1, 'Unknown'), (0, 'Compatible'), (1, 'Slightly incompatible'), (2, 'Incompatible'),
