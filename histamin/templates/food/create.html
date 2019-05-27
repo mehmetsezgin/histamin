@@ -7,13 +7,26 @@
 {% block content %}
   <form method="post">
     <label for="group">Group</label>
-    <input name="group" id="group" value="{{ request.form['group'] }}" required>
+    <select name="group" width="300px">
+       {% for group in groups %}
+                <option value="{{ group.id}}">{{ group.group_name }}</option>
+       {% endfor %}
+    </select>
     <label for="name">Name</label>
     <input name="name" id="name">{{ request.form['name'] }}</input>
     <label for="rating">Compatibility Rating</label>
-    <input name="rating" id="rating">{{ request.form['rating'] }}</input>
+
+    <select name="rating">
+        {% for value, description in cr_list %}
+           <option value="{{value}}" >{{description}}</option>
+        {% endfor %}
+    </select>
     <label for="trigger">Trigger Mechanism</label>
-    <input name="trigger" id="trigger">{{ request.form['trigger'] }}</input>
+    <select name="trigger">
+        {% for value, description in tm_list %}
+           <option value="{{value}}" >{{description}}</option>
+        {% endfor %}
+    </select>
     <input type="submit" value="Save">
   </form>
 {% endblock %}

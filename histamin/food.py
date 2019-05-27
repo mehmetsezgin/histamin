@@ -43,25 +43,37 @@ def get_food(id):
 def create():
     """Create a new post for the current user."""
     if request.method == "POST":
-        title = request.form["title"]
-        body = request.form["body"]
+        group = request.form["group"]
+        name = request.form["name"]
+        rating = request.form["rating"]
+        trigger = request.form["trigger"]
         error = None
 
-        if not title:
-            error = "Title is required."
+        if not name:
+            error = "Name is required."
 
         if error is not None:
             flash(error)
         else:
             db = get_db()
             db.execute(
-                "INSERT INTO post (title, body, author_id)" " VALUES (?, ?, ?)",
-                (title, body, g.user["id"]),
+                "INSERT INTO food (group_id, name, compatibility_rating, trigger_mechanism)" " VALUES (?, ?, ?, ?)",
+                (group, name, rating, trigger),
             )
             db.commit()
-            return redirect(url_for("blog.index"))
+            return redirect(url_for("food.index"))
 
-    return render_template("food/create.html")
+    db = get_db()
+    groups = db.execute(
+        "SELECT id, group_name FROM food_group "
+    ).fetchall()
+
+    compatibility_rating_list = [(-1, 'Unknown'), (0, 'Compatible'), (1, 'Slightly incompatible'), (2, 'Incompatible'),
+                                 (3, 'Severely incompatible')]
+    trigger_mechanism_list = [('', ''), ('H', 'Contains Histamine'), ('H!', 'Perishable, Histamine Increases'),
+                              ('A', 'Contains other biogenic amines'), ('L', 'Histamine Liberator'), ('B', 'Blocks DAO')]
+    return render_template("food/create.html", groups=groups, cr_list=compatibility_rating_list,
+                           tm_list=trigger_mechanism_list)
 
 
 @bp.route("/update/<int:id>", methods=("GET", "POST"))
