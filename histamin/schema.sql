@@ -14,7 +14,7 @@ CREATE TABLE food (
   group_id INTEGER NOT NULL,
   name TEXT NOT NULL,
   compatibility_rating INTEGER NOT NULL,
-  trigger_mechanism INTEGER NOT NULL,
+  trigger_mechanism TEXT NOT NULL,
   FOREIGN KEY (group_id) REFERENCES food_group (id)
 );
 
