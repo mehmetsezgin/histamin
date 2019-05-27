@@ -11,6 +11,7 @@ CREATE TABLE food_group (
 
 CREATE TABLE food (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
+  group_id INTEGER NOT NULL,
   name TEXT NOT NULL,
   compatibility_rating INTEGER NOT NULL,
   trigger_mechanism INTEGER NOT NULL,
