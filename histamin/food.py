@@ -104,15 +104,15 @@ def update(id):
     return render_template("food/update.html", food=food)
 
 
-@bp.route("/delete/<int:id>", methods=("POST",))
+@bp.route("/delete/<int:id>", methods=("GET", "POST"))
 def delete(id):
     """Delete a post.
 
     Ensures that the post exists and that the logged in user is the
     author of the post.
     """
-    get_post(id)
+    get_food(id)
     db = get_db()
-    db.execute("DELETE FROM post WHERE id = ?", (id,))
+    db.execute("DELETE FROM food WHERE id = ?", (id,))
     db.commit()
     return redirect(url_for("food.index"))
